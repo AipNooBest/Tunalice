@@ -18,9 +18,12 @@ export default {
         }
 
         auth.signup(name, email, password)
-            .then(r => res.status(r.code).json(r))
+            .then(r => {
+                logger.info(r.code, "Сервер успешно ответил пользователю", r.message);
+                res.status(r.code).json(r)
+            })
             .catch(err => {
-                logger.error(err)
+                logger.error(err, "Произошла ошибка на стороне сервера")
                 const httpErr = new ApiResponse(500, "Не удалось выполнить запрос")
                 res.status(httpErr.code).send(httpErr)
             })
