@@ -7,7 +7,7 @@ CREATE TABLE solved
 (
     task_id int NOT NULL UNIQUE,
     user_id int NOT NULL UNIQUE
-) WITHOUT OIDS;
+);
 
 
 CREATE TABLE tasks
@@ -18,7 +18,7 @@ CREATE TABLE tasks
     path text NOT NULL UNIQUE,
     theory_id int NOT NULL,
     PRIMARY KEY (id)
-) WITHOUT OIDS;
+);
 
 
 CREATE TABLE theories
@@ -29,7 +29,7 @@ CREATE TABLE theories
     -- SSRF, XXE
     theme varchar(50) NOT NULL UNIQUE,
     PRIMARY KEY (id)
-) WITHOUT OIDS;
+);
 
 
 CREATE TABLE users
@@ -41,7 +41,7 @@ CREATE TABLE users
     -- Алгоритм хэширования паролей: argon2i
     password char(100) NOT NULL UNIQUE,
     PRIMARY KEY (id)
-) WITHOUT OIDS;
+);
 
 
 
