@@ -3,19 +3,24 @@ import bodyParser from 'body-parser';
 import routes from '../../src/routes/v1'
 import express from "express";
 import dotenv from "dotenv";
-import exp from "node:constants";
+import ApiResponse from "../../src/models/ApiResponse";
 dotenv.config();
 
 const app = express()
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(routes)
 
 afterEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
 });
+jest.mock('../../src/services/auth', () => ({
+    signup: () => {
+        return new Promise(resolve => resolve(new ApiResponse(200, "Успех")))
+    }
+}))
 
-describe('check-auth-system', () => {
+describe('validation-tests', () => {
     test("not-provided-data", async () => {
         // Должен выдать ошибку в случае, если не получено одно из значений
         const res = await request(app)
@@ -71,4 +76,3 @@ describe('check-auth-system', () => {
         expect(res.status).toBe(200)
     })
 })
-
