@@ -1,6 +1,7 @@
 import express, { Express } from "express";
 import db from "./utils/postgres"
 import bodyParser from 'body-parser';
+import crypto from "crypto";
 import routes from './routes/v1/'
 import dotenv from "dotenv";
 import logger from "./utils/logger";
@@ -20,6 +21,12 @@ db.query("SELECT now()", [])
         }
         process.exit(1);
     });
+
+if (process.env.APP_SECRET === undefined){
+    logger.warn("Переменная окружения APP_SECRET не была установлена!" +
+        "Для генерации секретов будет использоваться случайное значение, которое сбросится при перезапуске!")
+    process.env.APP_SECRET = crypto.randomBytes(64).toString('hex');
+}
 
 
 const app: Express = express();

@@ -2,6 +2,8 @@ import db from '../utils/postgres'
 import ApiResponse from "../models/ApiResponse";
 import logger from "../utils/logger";
 import argon2 from "argon2";
+import jwt from "jsonwebtoken"
+import c from "../consts";
 
 export default {
     signup: async (name: string, email: string, password: string) => {
@@ -23,9 +25,27 @@ export default {
         )
         return new ApiResponse(200, "Аккаунт успешно создан")
     },
-    login: async (email: string, password: string) => {
-        new Promise((resolve, reject) => {
-            resolve(true)
+    login: async (emailOrUsername: string, password: string) => {
+        const queryResult = await db.query('SELECT id, password FROM users WHERE email = $1 OR username = $1', [emailOrUsername])
+        let isPasswordCorrect = false
+        if (!queryResult || queryResult.rows.length === 0) {
+            logger.debug(emailOrUsername, "Попытка зайти под несуществующим аккаунтом")
+        } else {
+            isPasswordCorrect = await argon2.verify(queryResult.rows[0].password, password)
+        }
+        if (!isPasswordCorrect) {
+            return new ApiResponse(401, c.INCORRECT_LOGIN_OR_PASSWORD)
+        }
+
+        const secret = process.env.APP_SECRET
+        if (!secret){
+            logger.error("Переменная APP_SECRET не установлена на этапе аутентификации. Невозможно создать токен")
+            return new ApiResponse(500, c.INTERNAL_SERVER_ERROR)
+        }
+        let token = jwt.sign({user_id: queryResult.rows[0].id}, secret, {
+            expiresIn: '10h',
+            algorithm: 'HS256'
         })
+        return new ApiResponse(200, c.LOGIN_SUCCESSFUL, {token})
     }
 }
