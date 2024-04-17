@@ -9,10 +9,10 @@ export default {
     signup(req: Request, res: Response) {
         const { name, email, password } = req.body;
         if (!name || !email || !password || !name.length) {
-            return res.status(400).send(new ApiResponse(400, "Не указаны все необходимые поля"))
+            return res.status(400).send(new ApiResponse(400, c.MISSING_FIELDS))
         }
         if (!valid.isAlphanumerical(name) || !valid.isEmail(email)) {
-            return res.status(400).send(new ApiResponse(400, "Некорректный формат данных"))
+            return res.status(400).send(new ApiResponse(400, c.INVALID_DATA))
         }
         if (password.length < 8) {
             return res.status(400).send(new ApiResponse(400, "Слишком короткий пароль"))
@@ -20,12 +20,12 @@ export default {
 
         auth.signup(name, email, password)
             .then(r => {
-                logger.info(r.code, "Сервер успешно ответил пользователю", r.message);
+                logger.info({code: r.code, server_message: r.message}, "Сервер успешно ответил пользователю");
                 res.status(r.code).json(r)
             })
             .catch(err => {
                 logger.error(err, "Произошла ошибка на стороне сервера")
-                const httpErr = new ApiResponse(500, "Не удалось выполнить запрос")
+                const httpErr = new ApiResponse(500, c.INTERNAL_SERVER_ERROR)
                 res.status(httpErr.code).send(httpErr)
             })
     },
