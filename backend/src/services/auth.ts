@@ -31,7 +31,7 @@ export default {
         if (!queryResult || queryResult.rows.length === 0) {
             logger.debug(emailOrUsername, "Попытка зайти под несуществующим аккаунтом")
         } else {
-            isPasswordCorrect = await argon2.verify(queryResult.rows[0].password, password)
+            isPasswordCorrect = await argon2.verify(queryResult.rows[0].password.trim(), password)
         }
         if (!isPasswordCorrect) {
             return new ApiResponse(401, c.INCORRECT_LOGIN_OR_PASSWORD)
