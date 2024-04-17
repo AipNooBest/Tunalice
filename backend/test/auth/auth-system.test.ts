@@ -36,11 +36,11 @@ describe("signup-tests", () => {
                 email: "test@test.com",
                 password: "12345678"
             })
-        const result = db.public.one('SELECT username, email FROM users')
+        const saved = db.public.one('SELECT username, email FROM users')
 
         expect(res.status).toBe(200)
-        expect(result.username).toBe('SomeTestUser')
-        expect(result.email).toBe('test@test.com')
+        expect(saved.username).toBe('SomeTestUser')
+        expect(saved.email).toBe('test@test.com')
     })
     test("login-to-new-account-with-name", async () => {
         process.env.APP_SECRET = "this-secret-is-used-only-for-tests!"
