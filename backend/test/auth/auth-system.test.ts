@@ -21,6 +21,12 @@ jest.mock('../../src/utils/postgres', () => ({
     }
 }))
 
+jest.mock('jsonwebtoken', () => ({
+    sign: (_payload: string, _secret: string, _options: object) => {
+        return "token-used-for-testing-purposes"
+    }
+}))
+
 describe("signup-tests", () => {
     test("create-new-account", async () => {
         const res = await request(app)
@@ -35,6 +41,30 @@ describe("signup-tests", () => {
         expect(res.status).toBe(200)
         expect(result.username).toBe('SomeTestUser')
         expect(result.email).toBe('test@test.com')
+    })
+    test("login-to-new-account-with-name", async () => {
+        process.env.APP_SECRET = "this-secret-is-used-only-for-tests!"
+        const res = await request(app)
+            .post('/auth/login')
+            .send({
+                emailOrUsername: "SomeTestUser",
+                password: "12345678"
+            })
+
+        expect(res.status).toBe(200)
+        expect(res.body.body.token).toBe("token-used-for-testing-purposes")
+    })
+    test("login-to-new-account-with-email", async () => {
+        process.env.APP_SECRET = "this-secret-is-used-only-for-tests!"
+        const res = await request(app)
+            .post('/auth/login')
+            .send({
+                emailOrUsername: "test@test.com",
+                password: "12345678"
+            })
+
+        expect(res.status).toBe(200)
+        expect(res.body.body.token).toBe("token-used-for-testing-purposes")
     })
 })
 
