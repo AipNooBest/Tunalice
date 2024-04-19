@@ -4,6 +4,8 @@ import ApiResponse from "../models/ApiResponse";
 import valid from "../utils/validator";
 import logger from "../utils/logger";
 import c from "../consts"
+import RequestWithJWT from '../interfaces/requestWithJWT';
+import exp from "node:constants";
 
 export default {
     signup(req: Request, res: Response) {
@@ -49,5 +51,22 @@ export default {
                 res.status(httpErr.code).send(httpErr)
             })
     },
-    logout(req: Request, res: Response) {}
+    logout(req: Request, res: Response) {
+        let jwtTokenSig: any = (req as RequestWithJWT).jwt.signature
+        let expires
+        try {
+            let payload = (req as RequestWithJWT).jwt.payload
+            expires = typeof payload === 'string' ? JSON.parse(payload).exp : payload.exp
+        } catch (e) {
+            logger.error(expires)
+            return res.status(400).send(new ApiResponse(400, c.INVALID_DATA))
+        }
+        if (!jwtTokenSig) {
+            // Вряд-ли это вообще возможно, но на всякий случай добавляем проверку
+            return res.status(400).send(new ApiResponse(400, c.INVALID_DATA))
+        }
+
+        let result = auth.logout(jwtTokenSig, expires)
+        res.send(result.code).json(result)
+    }
 }

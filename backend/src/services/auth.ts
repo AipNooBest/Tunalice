@@ -4,6 +4,7 @@ import logger from "../utils/logger";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken"
 import c from "../consts";
+import cache from "../utils/cache";
 
 export default {
     signup: async (name: string, email: string, password: string) => {
@@ -47,5 +48,9 @@ export default {
             algorithm: 'HS256'
         })
         return new ApiResponse(200, c.LOGIN_SUCCESSFUL, {token})
+    },
+    logout: (signature: string, expires: number) => {
+        cache.addWithTimeout(signature, "", Date.now() - expires)
+        return new ApiResponse(200, c.LOGOUT_SUCCESSFUL)
     }
 }

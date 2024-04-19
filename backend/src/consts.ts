@@ -8,5 +8,6 @@ export default {
     TOKEN_IS_INCORRECT: "Неправильный токен аутентификации",
 
     // Успешные ответы
-    LOGIN_SUCCESSFUL: "Успешная аутентификация"
+    LOGIN_SUCCESSFUL: "Успешная аутентификация",
+    LOGOUT_SUCCESSFUL: "Успешный выход из аккаунта"
 }
