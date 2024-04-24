@@ -5,5 +5,6 @@ const router = Router();
 
 router.get('/list', asyncHandler(theory.list));
 router.get('/:id([0-9]+)', asyncHandler(theory.getById));
+router.get('/categories', asyncHandler(theory.categories));
 
 export default router

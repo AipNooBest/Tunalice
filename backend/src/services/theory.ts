@@ -13,5 +13,14 @@ export default {
             throw new NotFoundError("Теория с данным ID не найдена")
         }
         return new ApiResponse("Успешно", 200, specificTheory.rows)
+    },
+    categories: async () => {
+        const allCategories = await db.query('SELECT DISTINCT theme FROM theories', [])
+        let allCategoriesAsList: string[] = []
+        for (const category of allCategories.rows) {
+            allCategoriesAsList.push(category.theme)
+        }
+
+        return new ApiResponse("Успешно", 200, allCategoriesAsList)
     }
 }

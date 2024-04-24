@@ -12,5 +12,10 @@ export default {
         theory.getById(id)
             .then(r => res.status(r.code).json(r))
             .catch(next)
+    },
+    categories(_req: Request, res: Response, next: NextFunction) {
+        theory.categories()
+            .then(r => res.status(r.code).json(r))
+            .catch(next)
     }
 }
