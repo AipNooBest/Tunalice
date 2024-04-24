@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import task from './task';
-import auth from "./auth";
+import auth from './auth';
+import theory from './theory'
 const router = Router()
 
 router.get('/status', (req, res) => {
@@ -13,6 +14,7 @@ router.get('/status', (req, res) => {
 });
 
 router.use('/auth', auth)
+router.use('/theory', theory)
 router.use('/task', task)
 
 export default router
