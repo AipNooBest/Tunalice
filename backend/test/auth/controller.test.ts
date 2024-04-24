@@ -16,7 +16,7 @@ afterEach(() => {
 });
 jest.mock('../../src/services/auth', () => ({
     signup: () => {
-        return new Promise(resolve => resolve(new ApiResponse(200, "Успех")))
+        return new Promise(resolve => resolve(new ApiResponse("Успех")))
     }
 }))
 

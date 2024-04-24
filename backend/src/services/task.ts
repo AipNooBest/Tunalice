@@ -1,10 +1,10 @@
-import ApiResponse from "../models/ApiResponse";
+import {ApiError} from "../exceptions/apiError";
 
 export default {
     list: (error: boolean) => {
         return new Promise<Array<Object>>((resolve, reject) => {
             if (error) {
-                reject(new ApiResponse(500, "Ошибка"));
+                throw new ApiError()
             }
             resolve([
                 {

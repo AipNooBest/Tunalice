@@ -5,6 +5,7 @@ import crypto from "crypto";
 import routes from './routes/v1/'
 import dotenv from "dotenv";
 import logger from "./utils/logger";
+import { errorHandler } from "./middlewares/error";
 dotenv.config();
 
 if (
@@ -35,6 +36,7 @@ const port: string = process.env.APP_PORT;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/api/v1', routes)
+app.use(errorHandler)
 app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
 });
