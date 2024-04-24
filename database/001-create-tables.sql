@@ -39,7 +39,7 @@ CREATE TABLE users
     email varchar(100) NOT NULL UNIQUE,
     registration_date date NOT NULL,
     -- Алгоритм хэширования паролей: argon2i
-    password char(100) NOT NULL UNIQUE,
+    password varchar(150) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
 
