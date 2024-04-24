@@ -4,11 +4,13 @@ import fs from "fs";
 import express from "express";
 import bodyParser from "body-parser";
 import routes from "../../src/routes/v1";
+import {errorHandler} from "../../src/middlewares/error";
 
 const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(routes)
+app.use(errorHandler)
 
 const db = newDb()
 db.public.none(fs.readFileSync('../database/001-create-tables.sql', 'utf-8'))
@@ -24,6 +26,14 @@ jest.mock('../../src/utils/postgres', () => ({
 jest.mock('jsonwebtoken', () => ({
     sign: (_payload: string, _secret: string, _options: object) => {
         return "token-used-for-testing-purposes"
+    },
+    verify: (_payload: string, _secretOrPublicKey: string, _options: object) => {
+        return {
+            signature: "some-signature",
+            payload: {
+                user_id: 1
+            }
+        }
     }
 }))
 
@@ -65,6 +75,18 @@ describe("signup-tests", () => {
 
         expect(res.status).toBe(200)
         expect(res.body.body.token).toBe("token-used-for-testing-purposes")
+    })
+    test("change-password", async () => {
+        process.env.APP_SECRET = "this-secret-is-used-only-for-tests!"
+        const res = await request(app)
+            .post('/auth/change-password')
+            .set('Authorization', 'Bearer some.jwt.token')
+            .send({
+                oldPassword: "12345678",
+                newPassword: "myNewTestEpicPassword"
+            })
+
+        expect(res.status).toBe(200)
     })
 })
 

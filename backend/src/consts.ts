@@ -8,6 +8,8 @@ export default {
 
     // 401
     INCORRECT_LOGIN_OR_PASSWORD: "Неправильный логин или пароль",
+    INCORRECT_OLD_PASSWORD: "Старый пароль не соответствует действительному",
+    SAME_PASSWORD: "Новый пароль не может быть таким же, как старый",
     TOKEN_NOT_PROVIDED: "Токен аутентификации не предоставлен",
     TOKEN_IS_INCORRECT: "Неправильный токен аутентификации",
 
@@ -22,5 +24,6 @@ export default {
 
     // Успешные ответы
     LOGIN_SUCCESSFUL: "Успешная аутентификация",
-    LOGOUT_SUCCESSFUL: "Успешный выход из аккаунта"
+    LOGOUT_SUCCESSFUL: "Успешный выход из аккаунта",
+    PASSWORD_CHANGED_SUCCESSFULLY: "Пароль был успешно изменён"
 }

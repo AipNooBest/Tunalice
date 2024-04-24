@@ -57,5 +57,28 @@ export default {
 
         let result = auth.logout(jwtTokenSig, expires)
         res.send(result.code).json(result)
+    },
+    changePassword(req: Request, res: Response) {
+        const { oldPassword, newPassword } = req.body;
+        if (!oldPassword || !newPassword) {
+            throw new BadRequestError(c.MISSING_FIELDS)
+        }
+
+        if (newPassword === oldPassword) {
+            throw new BadRequestError(c.SAME_PASSWORD)
+        }
+
+        if (newPassword.length < 8) {
+            throw new BadRequestError(c.PASSWORD_TOO_SHORT)
+        }
+
+        let payload = (req as RequestWithJWT).jwt.payload
+        let userId = typeof payload === 'string' ? JSON.parse(payload).user_id : payload.user_id
+
+        auth.changePassword(oldPassword, newPassword, userId)
+            .then(r => {
+                logger.info({code: r.code, server_message: r.message}, "Сервер успешно ответил пользователю");
+                res.status(r.code).json(r)
+            })
     }
 }

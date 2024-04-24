@@ -7,5 +7,6 @@ const router = Router();
 router.post('/signup', asyncHandler(auth.signup));
 router.post('/login', asyncHandler(auth.login));
 router.get('/logout', session.authenticate, asyncHandler(auth.logout));
+router.post('/change-password', session.authenticate, asyncHandler(auth.changePassword));
 
 export default router;

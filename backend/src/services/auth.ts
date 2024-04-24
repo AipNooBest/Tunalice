@@ -54,5 +54,26 @@ export default {
     logout: (signature: string, expires: number) => {
         cache.addWithTimeout(signature, "", Date.now() - expires)
         return new ApiResponse(c.LOGOUT_SUCCESSFUL)
+    },
+    async changePassword(oldPassword: string, newPassword: string, userId: number) {
+        const getPasswordQueryResult = await db.query('SELECT password FROM users WHERE id = $1', [userId])
+        let isPasswordCorrect = false
+        if (!getPasswordQueryResult || getPasswordQueryResult.rows.length === 0) {
+            logger.warn(userId, "В JWT предоставлен несуществующий ID пользователя")
+        } else {
+            isPasswordCorrect = await argon2.verify(getPasswordQueryResult.rows[0].password.trim(), oldPassword)
+        }
+        if (!isPasswordCorrect) {
+            throw new UnauthorizedError(c.INCORRECT_OLD_PASSWORD)
+        }
+
+        const hashedPassword = await argon2.hash(newPassword, {
+            type: argon2.argon2i,
+            memoryCost: 4096,
+            parallelism: 1
+        })
+
+        await db.query('UPDATE users SET password = $1 WHERE id = $2', [hashedPassword, userId])
+        return new ApiResponse(c.PASSWORD_CHANGED_SUCCESSFULLY)
     }
 }
