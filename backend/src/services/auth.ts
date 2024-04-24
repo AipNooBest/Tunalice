@@ -55,7 +55,7 @@ export default {
         cache.addWithTimeout(signature, "", Date.now() - expires)
         return new ApiResponse(c.LOGOUT_SUCCESSFUL)
     },
-    async changePassword(oldPassword: string, newPassword: string, userId: number) {
+    changePassword: async (oldPassword: string, newPassword: string, userId: number) => {
         const getPasswordQueryResult = await db.query('SELECT password FROM users WHERE id = $1', [userId])
         let isPasswordCorrect = false
         if (!getPasswordQueryResult || getPasswordQueryResult.rows.length === 0) {

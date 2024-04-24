@@ -1,5 +1,5 @@
 import auth from '../services/auth';
-import { Request, Response } from "express";
+import {NextFunction, Request, Response} from "express";
 import valid from "../utils/validator";
 import logger from "../utils/logger";
 import c from "../consts"
@@ -7,7 +7,7 @@ import RequestWithJWT from '../interfaces/requestWithJWT';
 import {BadRequestError} from "../exceptions/badRequestError";
 
 export default {
-    signup(req: Request, res: Response) {
+    signup(req: Request, res: Response, next: NextFunction) {
         const { name, email, password } = req.body;
         if (!name || !email || !password || !name.length) {
             throw new BadRequestError(c.MISSING_FIELDS)
@@ -24,8 +24,9 @@ export default {
                 logger.info({code: r.code, server_message: r.message}, "Сервер успешно ответил пользователю");
                 res.status(r.code).json(r)
             })
+            .catch(next)
     },
-    login(req: Request, res: Response) {
+    login(req: Request, res: Response, next: NextFunction) {
         const { emailOrUsername, password } = req.body;
         if (!emailOrUsername || !password) {
             throw new BadRequestError(c.MISSING_FIELDS)
@@ -39,6 +40,7 @@ export default {
                 logger.info({code: r.code, server_message: r.message}, "Сервер успешно ответил пользователю");
                 res.status(r.code).json(r)
             })
+            .catch(next)
     },
     logout(req: Request, res: Response) {
         let jwtTokenSig: any = (req as RequestWithJWT).jwt.signature
@@ -58,7 +60,7 @@ export default {
         let result = auth.logout(jwtTokenSig, expires)
         res.send(result.code).json(result)
     },
-    changePassword(req: Request, res: Response) {
+    changePassword(req: Request, res: Response, next: NextFunction) {
         const { oldPassword, newPassword } = req.body;
         if (!oldPassword || !newPassword) {
             throw new BadRequestError(c.MISSING_FIELDS)
@@ -80,5 +82,6 @@ export default {
                 logger.info({code: r.code, server_message: r.message}, "Сервер успешно ответил пользователю");
                 res.status(r.code).json(r)
             })
+            .catch(next)
     }
 }
