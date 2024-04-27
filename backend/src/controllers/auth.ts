@@ -5,6 +5,7 @@ import logger from "../utils/logger";
 import c from "../consts"
 import RequestWithJWT from '../interfaces/requestWithJWT';
 import {BadRequestError} from "../exceptions/badRequestError";
+import helpers from "../utils/helpers"
 
 export default {
     signup(req: Request, res: Response, next: NextFunction) {
@@ -74,8 +75,7 @@ export default {
             throw new BadRequestError(c.PASSWORD_TOO_SHORT)
         }
 
-        let payload = (req as RequestWithJWT).jwt.payload
-        let userId = typeof payload === 'string' ? JSON.parse(payload).user_id : payload.user_id
+        let userId = helpers.getUserIdFromRequest(req as RequestWithJWT)
 
         auth.changePassword(oldPassword, newPassword, userId)
             .then(r => {
