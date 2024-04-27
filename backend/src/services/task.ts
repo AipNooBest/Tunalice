@@ -1,19 +1,10 @@
-import {ApiError} from "../exceptions/apiError";
+import db from "../utils/postgres";
+import ApiResponse from "../models/ApiResponse";
+
 
 export default {
-    list: (error: boolean) => {
-        return new Promise<Array<Object>>((resolve, reject) => {
-            if (error) {
-                throw new ApiError()
-            }
-            resolve([
-                {
-                    name: "task1",
-                    difficulty: "medium",
-                    path: "task1",
-                    theory_id: 1
-                }
-            ])
-        })
+    list: async () => {
+        const allTasks = await db.query('SELECT id, name, difficulty, path FROM tasks', [])
+        return new ApiResponse("Успешно", 200, allTasks.rows)
     }
 }
