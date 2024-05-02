@@ -12,5 +12,12 @@ export default {
         task.getDetailsById(id)
             .then(r => res.status(r.code).json(r))
             .catch(next)
+    },
+    getSourceById: (req: Request, res: Response, next: NextFunction) => {
+        let id = parseInt(req.params.id)
+        res.header("Access-Control-Allow-Origin", "*");
+        task.getSourceById(id)
+            .then(r => res.status(r.code).json(r))
+            .catch(next)
     }
 }

@@ -32,5 +32,26 @@ export default {
             throw new NotFoundError(c.THEORY_NOT_FOUND)
         }
         return new ApiResponse("Успешно", 200, {name, difficulty, content: fileContent})
+    },
+    getSourceById: async (id: number) => {
+        const specificTask = await db.query('SELECT path FROM tasks WHERE id = $1', [id])
+        if (specificTask.rows.length === 0) {
+            throw new NotFoundError(c.THEORY_NOT_FOUND)
+        }
+        const { path: taskPath } = specificTask.rows[0]
+        // На всякий случай проверяем, что путь не содержит лишних символов во избежание Path Traversal
+        const sourceCodePath = path.resolve(`${process.cwd() + process.env.DATA_PATH}/practice/${taskPath}/src/`)
+        if (!sourceCodePath.startsWith(path.resolve(`${process.cwd() + process.env.DATA_PATH}/practice/`)) || !path.isAbsolute(sourceCodePath)) {
+            logger.warn(sourceCodePath, "Попытка эксплуатации Path Traversal")
+            throw new NotFoundError(c.THEORY_NOT_FOUND)
+        }
+
+        const sourceCodeDir = fs.readdirSync(sourceCodePath);
+        const files: object[] = [];
+        sourceCodeDir.forEach((file) => {
+            const data = fs.readFileSync(sourceCodePath + "/" + file, 'utf-8');
+            files.push({ filename: file, content: data });
+        });
+        return new ApiResponse("Успешно", 200, {files})
     }
 }
