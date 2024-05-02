@@ -15,6 +15,7 @@ export default {
 
     // 404
     NOT_FOUND: "Запрашиваемый ресурс не найден",
+    THEORY_NOT_FOUND: "Теория с данным ID не найдена",
 
     // 409
     ACCOUNT_ALREADY_EXISTS: "Аккаунт уже существует",

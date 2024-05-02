@@ -6,5 +6,11 @@ export default {
         task.list()
             .then(r => res.status(r.code).json(r))
             .catch(next)
+    },
+    getDetailsById: (req: Request, res: Response, next: NextFunction) => {
+        let id = parseInt(req.params.id)
+        task.getDetailsById(id)
+            .then(r => res.status(r.code).json(r))
+            .catch(next)
     }
 }
