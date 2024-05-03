@@ -5,6 +5,8 @@ import fs from "fs";
 import path from "node:path";
 import c from "../consts"
 import logger from "../utils/logger";
+import docker from "../utils/docker"
+import cache from "../utils/cache";
 
 
 export default {
@@ -53,5 +55,22 @@ export default {
             files.push({ filename: file, content: data });
         });
         return new ApiResponse("Успешно", 200, {files})
+    },
+    createInstance: async (taskId: number, userId: number) => {
+        const specificTask = await db.query('SELECT path FROM tasks WHERE id = $1', [taskId])
+        if (specificTask.rows.length === 0) {
+            throw new NotFoundError(c.TASK_NOT_FOUND)
+        }
+        const { path: taskPath } = specificTask.rows[0]
+        const composePath = path.resolve(`${process.cwd() + process.env.DATA_PATH}/practice/${taskPath}/docker-compose.yml`)
+        if (!composePath.startsWith(path.resolve(`${process.cwd() + process.env.DATA_PATH}/practice/`)) || !path.isAbsolute(composePath)) {
+            logger.warn(composePath, "Попытка эксплуатации Path Traversal")
+            throw new NotFoundError(c.TASK_NOT_FOUND)
+        }
+
+        let containerId = await docker.runTask(composePath, userId)
+        let flag = "testflagstring"
+        cache.add(String(userId), flag)
+        return new ApiResponse("Успешно", 200, {containerId})
     }
 }
