@@ -2,6 +2,8 @@ import {NextFunction, Request, Response} from "express";
 import task from '../services/task'
 import helpers from "../utils/helpers";
 import RequestWithJWT from "../interfaces/requestWithJWT";
+import validator from "../utils/validator";
+import {BadRequestError} from "../exceptions/badRequestError";
 
 export default {
     list: (_req: Request, res: Response, next: NextFunction) => {
@@ -32,6 +34,17 @@ export default {
     deleteInstance: (req: Request, res: Response, next: NextFunction) => {
         let userId = helpers.getUserIdFromRequest(req as RequestWithJWT)
         task.deleteInstance(userId)
+            .then(r => res.status(r.code).json(r))
+            .catch(next)
+    },
+    submitFlag: (req: Request, res: Response, next: NextFunction) => {
+        let userId = helpers.getUserIdFromRequest(req as RequestWithJWT)
+        const { flag } = req.body
+        if (!validator.isAlphanumerical(flag) || flag.length > 100) {
+            throw new BadRequestError()
+        }
+
+        task.submitFlag(userId, flag)
             .then(r => res.status(r.code).json(r))
             .catch(next)
     }

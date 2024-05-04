@@ -7,6 +7,7 @@ import c from "../consts"
 import logger from "../utils/logger";
 import docker from "../utils/docker"
 import cache from "../utils/cache";
+import {ApiError} from "../exceptions/apiError";
 
 
 export default {
@@ -70,12 +71,33 @@ export default {
 
         let containerId = await docker.runTask(composePath, userId)
         let flag = "testflagstring"
-        cache.add(String(userId), flag)
+        cache.add(String(userId), flag + "|" + taskId)
         return new ApiResponse("Успешно", 200, {containerId})
     },
     deleteInstance: async (userId: number) => {
         await docker.deleteTask(userId)
         cache.remove(String(userId))
         return new ApiResponse("Успешно")
+    },
+    submitFlag: async (userId: number, userFlag: string) => {
+        let taskFlagAndId = cache.get(String(userId))
+        if (!taskFlagAndId) {
+            throw new NotFoundError(c.FLAG_NOT_FOUND)
+        }
+
+        let taskFlag = taskFlagAndId.split('|')[0]
+        let taskId = taskFlagAndId.split('|')[1]
+
+        if (taskFlag !== userFlag) {
+            throw new ApiError(c.FLAG_IS_INCORRECT, 409)
+        }
+        const checkScoreQuery = await db.query('SELECT task_id, user_id FROM solved WHERE task_id = $1 AND user_id = $2', [taskId, userId])
+        if (checkScoreQuery.rows.length !== 0) {
+            return new ApiResponse(c.TASK_ALREADY_SOLVED_BUT_FLAG_IS_CORRECT, 202)
+        }
+
+        await db.query('INSERT INTO solved (task_id, user_id) VALUES ($1, $2)', [taskId, userId])
+
+        return new ApiResponse(c.FLAG_IS_CORRECT)
     }
 }

@@ -17,15 +17,23 @@ export default {
     NOT_FOUND: "Запрашиваемый ресурс не найден",
     THEORY_NOT_FOUND: "Теория с данным ID не найдена",
     TASK_NOT_FOUND: "Задание с данным ID не найдено",
+    FLAG_NOT_FOUND: "Флаг, связанный с данным пользователем, не найден. Попробуйте запустить задание заново",
 
     // 409
     ACCOUNT_ALREADY_EXISTS: "Аккаунт уже существует",
+    FLAG_IS_INCORRECT: "Неправильный флаг",
 
     // 500
     INTERNAL_SERVER_ERROR: "Произошла внутренняя ошибка сервера",
 
-    // Успешные ответы
+    // Успешные ответы //
+
+    // 200
     LOGIN_SUCCESSFUL: "Успешная аутентификация",
     LOGOUT_SUCCESSFUL: "Успешный выход из аккаунта",
-    PASSWORD_CHANGED_SUCCESSFULLY: "Пароль был успешно изменён"
+    PASSWORD_CHANGED_SUCCESSFULLY: "Пароль был успешно изменён",
+    FLAG_IS_CORRECT: "Флаг верный, задание зачтено",
+
+    // 202
+    TASK_ALREADY_SOLVED_BUT_FLAG_IS_CORRECT: "Флаг верный, но данное задание уже решено"
 }
