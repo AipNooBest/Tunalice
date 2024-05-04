@@ -28,5 +28,11 @@ export default {
         task.createInstance(taskId, userId)
             .then(r => res.status(r.code).json(r))
             .catch(next)
+    },
+    deleteInstance: (req: Request, res: Response, next: NextFunction) => {
+        let userId = helpers.getUserIdFromRequest(req as RequestWithJWT)
+        task.deleteInstance(userId)
+            .then(r => res.status(r.code).json(r))
+            .catch(next)
     }
 }

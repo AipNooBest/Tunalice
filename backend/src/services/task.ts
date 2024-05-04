@@ -72,5 +72,10 @@ export default {
         let flag = "testflagstring"
         cache.add(String(userId), flag)
         return new ApiResponse("Успешно", 200, {containerId})
+    },
+    deleteInstance: async (userId: number) => {
+        await docker.deleteTask(userId)
+        cache.remove(String(userId))
+        return new ApiResponse("Успешно")
     }
 }

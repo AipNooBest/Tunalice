@@ -40,6 +40,9 @@ export default {
             }
             failCounter++
         }
+    },
+    deleteTask: async (userId: number) => {
+        await cleanOldContainers(userId)
     }
 }
 
