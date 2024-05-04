@@ -1,9 +1,9 @@
-import {NextFunction, Request, Response} from "express";
-import task from '../services/task'
+import { NextFunction, Request, Response } from "express";
+import task from "../services/task";
 import helpers from "../utils/helpers";
 import RequestWithJWT from "../interfaces/requestWithJWT";
 import validator from "../utils/validator";
-import {BadRequestError} from "../exceptions/badRequestError";
+import { BadRequestError } from "../exceptions/badRequestError";
 
 export default {
     list: (_req: Request, res: Response, next: NextFunction) => {

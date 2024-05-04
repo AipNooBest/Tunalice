@@ -1,6 +1,6 @@
-import profile from '../../controllers/profile'
-import { Router } from 'express'
-import {asyncHandler} from "../../middlewares/asyncHandler";
+import profile from "../../controllers/profile";
+import { Router } from "express";
+import { asyncHandler } from "../../middlewares/asyncHandler";
 import session from "../../middlewares/session";
 const router = Router()
 

@@ -1,11 +1,11 @@
-import auth from '../services/auth';
-import {NextFunction, Request, Response} from "express";
+import auth from "../services/auth";
+import { NextFunction, Request, Response } from "express";
 import valid from "../utils/validator";
 import logger from "../utils/logger";
-import c from "../consts"
-import RequestWithJWT from '../interfaces/requestWithJWT';
-import {BadRequestError} from "../exceptions/badRequestError";
-import helpers from "../utils/helpers"
+import c from "../consts";
+import RequestWithJWT from "../interfaces/requestWithJWT";
+import { BadRequestError } from "../exceptions/badRequestError";
+import helpers from "../utils/helpers";
 
 export default {
     signup(req: Request, res: Response, next: NextFunction) {

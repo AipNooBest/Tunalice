@@ -1,5 +1,5 @@
-import pg, {DatabaseError} from 'pg';
-import logger from './logger';
+import pg, { DatabaseError } from "pg";
+import logger from "./logger";
 
 const pool = new pg.Pool()
 

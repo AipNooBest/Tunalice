@@ -1,5 +1,5 @@
 import request from "supertest";
-import routes from '../../src/routes/v1'
+import routes from "../../src/routes/v1";
 import express from "express";
 
 const app = express()

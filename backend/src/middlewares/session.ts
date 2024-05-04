@@ -1,12 +1,12 @@
-import {NextFunction, Request, Response} from "express";
-import jwt, {TokenExpiredError} from "jsonwebtoken";
-import c from "../consts"
+import { NextFunction, Request, Response } from "express";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
+import c from "../consts";
 import logger from "../utils/logger";
 import cache from "../utils/cache";
 import RequestWithJWT from "../interfaces/requestWithJWT";
-import {BadRequestError} from "../exceptions/badRequestError";
-import {ApiError} from "../exceptions/apiError";
-import {UnauthorizedError} from "../exceptions/unauthorizedError";
+import { BadRequestError } from "../exceptions/badRequestError";
+import { ApiError } from "../exceptions/apiError";
+import { UnauthorizedError } from "../exceptions/unauthorizedError";
 
 export default {
     authenticate(req: Request, res: Response, next: NextFunction) {

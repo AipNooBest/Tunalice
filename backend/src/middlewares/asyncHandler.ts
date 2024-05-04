@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from "express";
 
 /**
  * Асинхронный обработчик для обертывания API эндпоинтов, позволяющий асинхронно обрабатывать ошибки.

@@ -1,4 +1,4 @@
-import c from '../consts'
+import c from "../consts";
 
 export class ApiError extends Error {
     message!: string;

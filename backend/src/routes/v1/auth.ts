@@ -1,7 +1,7 @@
-import auth from '../../controllers/auth';
-import session from '../../middlewares/session';
+import auth from "../../controllers/auth";
+import session from "../../middlewares/session";
 import { Router } from "express";
-import {asyncHandler} from "../../middlewares/asyncHandler";
+import { asyncHandler } from "../../middlewares/asyncHandler";
 const router = Router();
 
 router.post('/signup', asyncHandler(auth.signup));

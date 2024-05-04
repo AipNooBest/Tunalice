@@ -1,6 +1,6 @@
-import db from "../utils/postgres"
+import db from "../utils/postgres";
 import ApiResponse from "../models/ApiResponse";
-import {NotFoundError} from "../exceptions/notFoundError";
+import { NotFoundError } from "../exceptions/notFoundError";
 import logger from "../utils/logger";
 import c from "../consts";
 import path from "node:path";

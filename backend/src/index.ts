@@ -1,8 +1,8 @@
 import express, { Express } from "express";
-import db from "./utils/postgres"
-import bodyParser from 'body-parser';
+import db from "./utils/postgres";
+import bodyParser from "body-parser";
 import crypto from "crypto";
-import routes from './routes/v1/'
+import routes from "./routes/v1/";
 import dotenv from "dotenv";
 import logger from "./utils/logger";
 import { errorHandler } from "./middlewares/error";

@@ -1,6 +1,6 @@
-import task from '../../controllers/task'
-import { Router } from 'express'
-import {asyncHandler} from "../../middlewares/asyncHandler";
+import task from "../../controllers/task";
+import { Router } from "express";
+import { asyncHandler } from "../../middlewares/asyncHandler";
 import session from "../../middlewares/session";
 const router = Router()
 

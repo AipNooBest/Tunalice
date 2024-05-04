@@ -1,12 +1,12 @@
-import db from '../utils/postgres'
+import db from "../utils/postgres";
 import ApiResponse from "../models/ApiResponse";
 import logger from "../utils/logger";
 import argon2 from "argon2";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 import c from "../consts";
 import cache from "../utils/cache";
-import {ApiError} from "../exceptions/apiError";
-import {UnauthorizedError} from "../exceptions/unauthorizedError";
+import { ApiError } from "../exceptions/apiError";
+import { UnauthorizedError } from "../exceptions/unauthorizedError";
 
 export default {
     signup: async (name: string, email: string, password: string) => {

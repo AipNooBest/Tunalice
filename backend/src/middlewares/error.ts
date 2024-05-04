@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { ApiError, IResponseError } from '../exceptions/apiError';
+import { Request, Response, NextFunction } from "express";
+import { ApiError, IResponseError } from "../exceptions/apiError";
 import logger from "../utils/logger";
 import c from "../consts";
 

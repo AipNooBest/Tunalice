@@ -1,10 +1,10 @@
 import request from "supertest";
-import {newDb} from "pg-mem";
+import { newDb } from "pg-mem";
 import fs from "fs";
 import express from "express";
 import bodyParser from "body-parser";
 import routes from "../../src/routes/v1";
-import {errorHandler} from "../../src/middlewares/error";
+import { errorHandler } from "../../src/middlewares/error";
 
 const app = express()
 app.use(bodyParser.json())

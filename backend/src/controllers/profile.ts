@@ -1,5 +1,5 @@
-import profile from '../services/profile'
-import {NextFunction, Request, Response} from "express";
+import profile from "../services/profile";
+import { NextFunction, Request, Response } from "express";
 import RequestWithJWT from "../interfaces/requestWithJWT";
 import helpers from "../utils/helpers";
 

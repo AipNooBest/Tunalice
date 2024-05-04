@@ -1,5 +1,5 @@
-import Docker from "dockerode"
-import Compose from "dockerode-compose"
+import Docker from "dockerode";
+import Compose from "dockerode-compose";
 import logger from "./logger";
 import path from "node:path";
 

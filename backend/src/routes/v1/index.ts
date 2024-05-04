@@ -1,7 +1,7 @@
-import { Router } from 'express'
-import task from './task';
-import auth from './auth';
-import theory from './theory'
+import { Router } from "express";
+import task from "./task";
+import auth from "./auth";
+import theory from "./theory";
 import profile from "./profile";
 const router = Router()
 

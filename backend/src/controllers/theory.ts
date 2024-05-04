@@ -1,5 +1,5 @@
 import theory from "../services/theory";
-import {NextFunction, Request, Response} from "express";
+import { NextFunction, Request, Response } from "express";
 
 export default {
     list(_req: Request, res: Response, next: NextFunction) {
