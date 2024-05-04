@@ -1,4 +1,4 @@
-import db from '../utils/postgres'
+import db from "../utils/postgres"
 import ApiResponse from "../models/ApiResponse";
 import {NotFoundError} from "../exceptions/notFoundError";
 import logger from "../utils/logger";
@@ -9,7 +9,7 @@ import fs from "fs";
 export default {
     list: async () => {
         const allTheory = await db.query('SELECT id, theme, path FROM theories', [])
-        return new ApiResponse("Успешно", 200, allTheory.rows)
+        return new ApiResponse(c.SUCCESS, 200, allTheory.rows)
     },
     getById: async (id: number) => {
         const specificTheory = await db.query('SELECT theme, path FROM theories WHERE id = $1', [id])
@@ -32,7 +32,7 @@ export default {
             throw new NotFoundError(c.THEORY_NOT_FOUND)
         }
 
-        return new ApiResponse("Успешно", 200, {theme, content: fileContent})
+        return new ApiResponse(c.SUCCESS, 200, {theme, content: fileContent})
     },
     categories: async () => {
         const allCategories = await db.query('SELECT DISTINCT theme FROM theories', [])
@@ -41,6 +41,6 @@ export default {
             allCategoriesAsList.push(category.theme)
         }
 
-        return new ApiResponse("Успешно", 200, allCategoriesAsList)
+        return new ApiResponse(c.SUCCESS, 200, allCategoriesAsList)
     }
 }

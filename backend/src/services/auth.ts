@@ -26,7 +26,7 @@ export default {
             'INSERT INTO users (username, email, registration_date, password)' +
             ' VALUES ($1, $2, NOW()::date, $3)', [name, email, hashedPassword]
         )
-        return new ApiResponse("Аккаунт успешно создан")
+        return new ApiResponse(c.ACCOUNT_CREATED_SUCCESSFULLY)
     },
     login: async (emailOrUsername: string, password: string) => {
         const queryResult = await db.query('SELECT id, password FROM users WHERE email = $1 OR username = $1', [emailOrUsername])

@@ -13,7 +13,7 @@ import {ApiError} from "../exceptions/apiError";
 export default {
     list: async () => {
         const allTasks = await db.query('SELECT id, name, difficulty, path FROM tasks', [])
-        return new ApiResponse("Успешно", 200, allTasks.rows)
+        return new ApiResponse(c.SUCCESS, 200, allTasks.rows)
     },
     getDetailsById: async (id: number) => {
         const specificTask = await db.query('SELECT name, difficulty, path, theory_id FROM tasks WHERE id = $1', [id])
@@ -34,7 +34,7 @@ export default {
             logger.warn(fullPath, "Файл README.md по указанному пути не найден")
             throw new NotFoundError(c.THEORY_NOT_FOUND)
         }
-        return new ApiResponse("Успешно", 200, {name, difficulty, content: fileContent})
+        return new ApiResponse(c.SUCCESS, 200, {name, difficulty, content: fileContent})
     },
     getSourceById: async (id: number) => {
         const specificTask = await db.query('SELECT path FROM tasks WHERE id = $1', [id])
@@ -55,7 +55,7 @@ export default {
             const data = fs.readFileSync(sourceCodePath + "/" + file, 'utf-8');
             files.push({ filename: file, content: data });
         });
-        return new ApiResponse("Успешно", 200, {files})
+        return new ApiResponse(c.SUCCESS, 200, {files})
     },
     createInstance: async (taskId: number, userId: number) => {
         const specificTask = await db.query('SELECT path FROM tasks WHERE id = $1', [taskId])
@@ -72,12 +72,12 @@ export default {
         let containerId = await docker.runTask(composePath, userId)
         let flag = "testflagstring"
         cache.add(String(userId), flag + "|" + taskId)
-        return new ApiResponse("Успешно", 200, {containerId})
+        return new ApiResponse(c.SUCCESS, 200, {containerId})
     },
     deleteInstance: async (userId: number) => {
         await docker.deleteTask(userId)
         cache.remove(String(userId))
-        return new ApiResponse("Успешно")
+        return new ApiResponse(c.SUCCESS)
     },
     submitFlag: async (userId: number, userFlag: string) => {
         let taskFlagAndId = cache.get(String(userId))
