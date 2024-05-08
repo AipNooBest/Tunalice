@@ -2,7 +2,7 @@ import db from "../utils/postgres";
 import ApiResponse from "../models/ApiResponse";
 import { NotFoundError } from "../exceptions/notFoundError";
 import { ApiError } from "../exceptions/apiError";
-import fs from "fs";
+import fs from "fs/promises"
 import path from "node:path";
 import c from "../consts";
 import logger from "../utils/logger";
@@ -29,7 +29,7 @@ export default {
         }
         let fileContent: string
         try {
-            fileContent = fs.readFileSync(fullPath + "/README.md", {encoding: 'utf-8'})
+            fileContent = await fs.readFile(fullPath + "/README.md", {encoding: 'utf-8'})
         } catch (e) {
             logger.warn(fullPath, "Файл README.md по указанному пути не найден")
             throw new NotFoundError(c.THEORY_NOT_FOUND)
@@ -49,13 +49,9 @@ export default {
             throw new NotFoundError(c.THEORY_NOT_FOUND)
         }
 
-        const sourceCodeDir = fs.readdirSync(sourceCodePath);
-        const files: object[] = [];
-        sourceCodeDir.forEach((file) => {
-            const data = fs.readFileSync(sourceCodePath + "/" + file, 'utf-8');
-            files.push({ filename: file, content: data });
-        });
-        return new ApiResponse(c.SUCCESS, 200, {files})
+        let tree = await prepareFileTree(sourceCodePath)
+
+        return new ApiResponse(c.SUCCESS, 200, {tree})
     },
     createInstance: async (taskId: number, userId: number) => {
         const specificTask = await db.query('SELECT path FROM tasks WHERE id = $1', [taskId])
@@ -100,4 +96,41 @@ export default {
 
         return new ApiResponse(c.FLAG_IS_CORRECT)
     }
+}
+
+
+async function prepareFileTree(sourceCodePath: string): Promise<object> {
+    let files = new Map()
+
+    const getFilesRecursively = async (directory: string): Promise<string[]> => {
+        const filesInDirectory = await fs.readdir(directory)
+        let returnedFiles = []
+        for (const fileName of filesInDirectory) {
+            const absolute = path.join(directory, fileName)
+            const fileId = absolute.replace(sourceCodePath + path.sep, "").replaceAll(path.sep, "_")
+            if ((await fs.stat(absolute)).isDirectory()) {
+                files.set(fileId, {
+                    text: fileName,
+                    custom: {
+                        isFile: false
+                    },
+                    children: await getFilesRecursively(absolute)
+                })
+            } else {
+                let content = await fs.readFile(absolute, {encoding: 'utf-8'})
+                files.set(fileId, {
+                    text: fileName,
+                    custom: {
+                        isFile: true,
+                        content
+                    }
+                })
+            }
+            returnedFiles.push(fileId)
+        }
+        return returnedFiles
+    };
+
+    await getFilesRecursively(sourceCodePath)
+    return Object.fromEntries(files)
 }
